@@ -16,7 +16,7 @@ func (app *application) serve() error {
 		WriteTimeout: 30 * time.Second,
 	}
 
-	log.Printf("%s server is running on port %s\n", app.config.env, srv.Addr)
+	log.Printf("%s server is running on port %s...\n", app.config.env, srv.Addr)
 
 	err := srv.ListenAndServe()
 	if err != nil {
