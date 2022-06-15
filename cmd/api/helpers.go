@@ -1,12 +1,32 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 	"strconv"
 
 	"github.com/julienschmidt/httprouter"
 )
+
+func (app *application) writeJSON(w http.ResponseWriter, status int, data interface{}, headers http.Header) error {
+	result, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+
+	result = append(result, '\n')
+
+	for key, val := range headers {
+		w.Header()[key] = val
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	w.Write(result)
+
+	return nil
+}
 
 func (app *application) readIDParam(r *http.Request) (int64, error) {
 	params := httprouter.ParamsFromContext(r.Context())
